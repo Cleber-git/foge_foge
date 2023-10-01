@@ -23,6 +23,7 @@ void show_map(MAPA* m);
 
 int acabou();
 
+// move fantasma
 
 
 

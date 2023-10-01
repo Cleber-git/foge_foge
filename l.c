@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
 #include "l.h"
 
 
@@ -95,40 +97,66 @@ void move(int direção, MAPA* m){
 
     switch (direção)
     {
+
         case 'w':
+
         if (  m->matriz[x-1][y] == '.' || m->matriz[x-1][y] == ' ')
         {
 
                 m->matriz[x-1][y] = '@';
                 m->matriz[x][y] = ' ';
         }
+
+        if (m->matriz[x-1][y] == 'u')
+                    {
+                        printf("O fantasma te encontrouuu, você perdeu\n");
+                        exit(1);;
+                    }
             
             break;
+            
         case 's':
+
         if (m->matriz[x+1][y] == '.' || m->matriz[x+1][y] == ' ')
         {   
 
                 m->matriz[x+1][y] = '@';
                 m->matriz[x][y] = ' ';
         }
-
             break;
+            
         case 'd':
+
         if ( m->matriz[x][y+1] == '.' ||  m->matriz[x][y+1] == ' ')
         {
                 m->matriz[x][y+1] = '@';
                 m->matriz[x][y] = ' ';
         }
+        if (m->matriz[x][y+1] == 'u')
+                    {
+                        printf("O fantasma te encontrouuu, você perdeu\n");
+                        exit(1);;
+                    }
 
             break;
+
         case 'a':
+
             if ( m->matriz[x][y-1] == '.' || m->matriz[x][y-1] == ' ')
             {
                     m->matriz[x][y-1] = '@';
                     m->matriz[x][y] = ' ';
+
             }
+            if (m->matriz[x][y-1] == 'u')
+                    {
+                        printf("O fantasma te encontrouuu, você perdeu\n");
+                        exit(1);
+                    }
             break;
+
         case 'q':
+        
             exit(1);
             break;
 
@@ -173,3 +201,5 @@ void move(int direção, MAPA* m){
 
 // }
 }
+
+
