@@ -68,33 +68,8 @@ int find_point(MAPA* m){
 
 }
 
-
-
-
-void move(int direção, MAPA* m){
-
-    int x;
-    int y;
-
-        
-    for (int i = 0; i < 5; i++)
-    {
-        for (int j = 0; j < m->colunas; j++)
-        {
-            if (m->matriz[i][j] == '@')
-            {
-                x = i;
-                y = j;
-                break;
-            }
-        }
-        
-
-    }
-
-
+void validar_passo(int x, int y, MAPA *m , char direção){
     
-
     switch (direção)
     {
 
@@ -109,7 +84,7 @@ void move(int direção, MAPA* m){
 
         if (m->matriz[x-1][y] == 'u')
                     {
-                        printf("O fantasma te encontrouuu, você perdeu\n");
+                        printf("O fantasma te encontrouuu, você perdeu!\n");
                         exit(1);
                     }
             
@@ -134,7 +109,7 @@ void move(int direção, MAPA* m){
         }
         if (m->matriz[x][y+1] == 'u')
                     {
-                        printf("O fantasma te encontrouuu, você perdeu\n");
+                        printf("O fantasma te encontrouuu, você perdeu!\n");
                         exit(1);
                     }
 
@@ -150,7 +125,7 @@ void move(int direção, MAPA* m){
             }
             if (m->matriz[x][y-1] == 'u')
                     {
-                        printf("O fantasma te encontrouuu, você perdeu\n");
+                        printf("O fantasma te encontrouuu, você perdeu!\n");
                         exit(1);
                     }
             break;
@@ -161,19 +136,29 @@ void move(int direção, MAPA* m){
             break;
 
     }
-    
+}
 
 
+void move(int direção, MAPA* m){
 
+    int x;
+    int y;
 
-
-
-
-
-
-
-
-
+        
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < m->colunas; j++)
+        {
+            if (m->matriz[i][j] == '@')
+            {
+                x = i;
+                y = j;
+                break;
+            }
+        }
+        
+    }
+    validar_passo(x, y, m, direção);
 
 
 // comentei por não está usando alocação dinâmica

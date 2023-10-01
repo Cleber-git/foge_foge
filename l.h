@@ -23,7 +23,9 @@ void show_map(MAPA* m);
 
 int acabou();
 
-// move fantasma
+
+void validar_passo(int x, int y, MAPA *m , char direção);
+
 
 
 
