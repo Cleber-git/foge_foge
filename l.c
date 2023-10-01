@@ -110,7 +110,7 @@ void move(int direção, MAPA* m){
         if (m->matriz[x-1][y] == 'u')
                     {
                         printf("O fantasma te encontrouuu, você perdeu\n");
-                        exit(1);;
+                        exit(1);
                     }
             
             break;
@@ -135,7 +135,7 @@ void move(int direção, MAPA* m){
         if (m->matriz[x][y+1] == 'u')
                     {
                         printf("O fantasma te encontrouuu, você perdeu\n");
-                        exit(1);;
+                        exit(1);
                     }
 
             break;
