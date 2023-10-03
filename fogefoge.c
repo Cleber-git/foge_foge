@@ -1,6 +1,5 @@
 #include "l.c"
-#include <stdio.h>
-#include <stdlib.h>
+
 
     MAPA m;
 
@@ -16,6 +15,7 @@ int main(){
         char comando;
         scanf(" %c", &comando);
         move(comando, &m);
+        find_point(&m);
 
     } while (!acabou());
     

@@ -1,13 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+
 
 #include "l.h"
 
-
-
-
-
+#define CIMA 'w'
+#define BAIXO 's'
+#define ESQUERDA 'a'
+#define DIREITA 'd'
 
 
 void le_mapa(MAPA* m){
@@ -47,7 +45,6 @@ int acabou(){
 }
 
 
-
 int find_point(MAPA* m){
 
     int calculator = 0;
@@ -64,7 +61,10 @@ int find_point(MAPA* m){
         }
         
     }
-    return calculator;
+    if ( calculator < 1 ) exit(1);
+
+    return 1;
+    
 
 }
 
@@ -73,7 +73,7 @@ void validar_passo(int x, int y, MAPA *m , char direção){
     switch (direção)
     {
 
-        case 'w':
+        case CIMA:
 
         if (  m->matriz[x-1][y] == '.' || m->matriz[x-1][y] == ' ')
         {
@@ -90,7 +90,7 @@ void validar_passo(int x, int y, MAPA *m , char direção){
             
             break;
             
-        case 's':
+        case BAIXO:
 
         if (m->matriz[x+1][y] == '.' || m->matriz[x+1][y] == ' ')
         {   
@@ -100,7 +100,7 @@ void validar_passo(int x, int y, MAPA *m , char direção){
         }
             break;
             
-        case 'd':
+        case DIREITA:
 
         if ( m->matriz[x][y+1] == '.' ||  m->matriz[x][y+1] == ' ')
         {
@@ -115,7 +115,7 @@ void validar_passo(int x, int y, MAPA *m , char direção){
 
             break;
 
-        case 'a':
+        case ESQUERDA:
 
             if ( m->matriz[x][y-1] == '.' || m->matriz[x][y-1] == ' ')
             {
@@ -138,12 +138,12 @@ void validar_passo(int x, int y, MAPA *m , char direção){
     }
 }
 
-
 void move(int direção, MAPA* m){
 
     int x;
     int y;
 
+    
         
     for (int i = 0; i < 5; i++)
     {
