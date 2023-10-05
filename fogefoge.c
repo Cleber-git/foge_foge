@@ -16,6 +16,7 @@ int main(){
         scanf(" %c", &comando);
         move(comando, &m);
         find_point(&m);
+        fantasma(&m);
 
     } while (!acabou());
     

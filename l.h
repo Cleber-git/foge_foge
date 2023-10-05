@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 struct mapa
 {
     char matriz[5][10+1];
@@ -13,6 +14,7 @@ FILE* f;
 
 typedef struct mapa MAPA;
 
+void fantasma(MAPA *m);
 void move(int direção, MAPA* m);
 
 int find_point(MAPA *m);

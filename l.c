@@ -1,40 +1,67 @@
-
-
 #include "l.h"
 
+// definindo xonstantes para o código ficar mais intuitivo
+
+#define HEROI '@'
+#define PAREDE_VERTICAL '|'
+#define PAREDE_HORIZONTAL '-'
 #define CIMA 'w'
 #define BAIXO 's'
 #define ESQUERDA 'a'
 #define DIREITA 'd'
+#define ALIMENTO '.'
+#define VAZIO ' '
+#define SAIR 'q'
+#define FANTASMA 'f'
 
 
+void fantasma(MAPA *m){
+
+    for ( int i = 0; i < m->linhas; i++ )
+    {
+        for ( int j = 0; j < m->colunas; j++ )
+        {
+            if ( m->matriz[ i ][ j ] == FANTASMA)
+            {
+                m->matriz[ i ][ j ] = ALIMENTO;
+                m->matriz[ i ][ j+1 ] = FANTASMA;
+                break;
+            }
+            
+        }
+        
+    }
+    
+
+
+}
 void le_mapa(MAPA* m){
 
 
-    f = fopen("mapa.txt", "r");
+    f = fopen( "mapa.txt", "r" );
 
-    fscanf(f, " %d %d\n", &m->linhas, &m->colunas);
+    fscanf( f, " %d %d\n", &m->linhas, &m->colunas );
 
 
-    for (int i = 0; i < 5; i++)
+    for ( int i = 0; i < 5; i++ )
     {
         
 
-        fscanf(f, " %s", m->matriz[i]);
+        fscanf( f, " %s", m->matriz[ i ] );
 
     }
-        if (!f)
+        if ( !f )
     {
-        printf("Erro, não foi possível abrir seu arquivo!\n");
+        printf( "Erro, não foi possível abrir seu arquivo!\n" );
     }
 }
 
 
-void show_map(MAPA* m){
+void show_map( MAPA* m ){
 
-    for (int i = 0; i < 5; i++)
+    for ( int i = 0; i < 5; i++ )
     {
-        printf("%s\n", m->matriz[i]);
+        printf("%s\n", m->matriz[ i ]);
     }
 
 }
@@ -45,15 +72,15 @@ int acabou(){
 }
 
 
-int find_point(MAPA* m){
+int find_point( MAPA* m ){
 
     int calculator = 0;
 
-    for (int i = 0; i < m->linhas; i++)
+    for ( int i = 0; i < m->linhas; i++ )
     {
-        for (int j = 0; j < m->colunas; j++)
+        for ( int j = 0; j < m->colunas; j++ )
         {
-            if (m->matriz[i][j] == '.')
+            if ( m->matriz[i][j] == ALIMENTO )
             {
                 calculator++;
             }
@@ -61,95 +88,79 @@ int find_point(MAPA* m){
         }
         
     }
-    if ( calculator < 1 ) exit(1);
+    if ( calculator < 1 ) exit( 1 );
 
     return 1;
     
 
 }
-
-void validar_passo(int x, int y, MAPA *m , char direção){
+ void validar_passo( int x, int y, MAPA *m , char direção ){
     
-    switch (direção)
+    switch ( direção )
     {
 
         case CIMA:
 
-        if (  m->matriz[x-1][y] == '.' || m->matriz[x-1][y] == ' ')
+        if (  m->matriz[ x - 1 ][ y ] == ALIMENTO || m->matriz[ x - 1 ][ y ] == VAZIO )
         {
 
-                m->matriz[x-1][y] = '@';
-                m->matriz[x][y] = ' ';
+                m->matriz[ x-1 ][ y ] = HEROI;
+                m->matriz[ x ][ y ] = VAZIO;
         }
-
-        if (m->matriz[x-1][y] == 'u')
-                    {
-                        printf("O fantasma te encontrouuu, você perdeu!\n");
-                        exit(1);
-                    }
             
             break;
             
         case BAIXO:
 
-        if (m->matriz[x+1][y] == '.' || m->matriz[x+1][y] == ' ')
+        if ( m->matriz[ x + 1 ][ y ] == ALIMENTO || m->matriz[ x + 1 ][ y ] == VAZIO )
         {   
 
-                m->matriz[x+1][y] = '@';
-                m->matriz[x][y] = ' ';
+                m->matriz[ x + 1 ][ y ] = HEROI;
+                m->matriz[ x ][ y ] = VAZIO;
         }
             break;
             
         case DIREITA:
 
-        if ( m->matriz[x][y+1] == '.' ||  m->matriz[x][y+1] == ' ')
+        if ( m->matriz[ x ][ y + 1 ] == ALIMENTO ||  m->matriz[ x ][ y + 1 ] == VAZIO )
         {
-                m->matriz[x][y+1] = '@';
-                m->matriz[x][y] = ' ';
+                m->matriz[ x ][ y + 1 ] = HEROI;
+                m->matriz[ x ][ y ] = VAZIO;
         }
-        if (m->matriz[x][y+1] == 'u')
-                    {
-                        printf("O fantasma te encontrouuu, você perdeu!\n");
-                        exit(1);
-                    }
 
             break;
 
         case ESQUERDA:
 
-            if ( m->matriz[x][y-1] == '.' || m->matriz[x][y-1] == ' ')
+            if ( m->matriz[ x ][ y - 1 ] == ALIMENTO || m->matriz[ x ][ y - 1 ] == VAZIO)
             {
-                    m->matriz[x][y-1] = '@';
-                    m->matriz[x][y] = ' ';
+                    m->matriz[ x ][ y - 1 ] = HEROI;
+                    m->matriz[ x ][ y ] = VAZIO;
 
             }
-            if (m->matriz[x][y-1] == 'u')
-                    {
-                        printf("O fantasma te encontrouuu, você perdeu!\n");
-                        exit(1);
-                    }
+
             break;
 
-        case 'q':
+        case SAIR:
         
-            exit(1);
+            exit( 1 );
             break;
 
     }
 }
 
-void move(int direção, MAPA* m){
+void move( int direção, MAPA* m ){
 
     int x;
     int y;
 
     
         
-    for (int i = 0; i < 5; i++)
+    for ( int i = 0; i < 5; i++ )
     {
-        for (int j = 0; j < m->colunas; j++)
+        for ( int j = 0; j < m->colunas; j++ )
         {
-            if (m->matriz[i][j] == '@')
+            if ( m->matriz[ i ][ j ] == HEROI )
             {
                 x = i;
                 y = j;
@@ -158,8 +169,10 @@ void move(int direção, MAPA* m){
         }
         
     }
-    validar_passo(x, y, m, direção);
+    validar_passo( x, y, m, direção );
 
+
+}
 
 // comentei por não está usando alocação dinâmica
 
@@ -185,6 +198,6 @@ void move(int direção, MAPA* m){
 //     }
 
 // }
-}
+
 
 

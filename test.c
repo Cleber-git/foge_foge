@@ -20,7 +20,7 @@ int main(){
 
 
 
-    printf("%d\n", line[rand() % 10]);
+    printf( "%d\n", line[ rand() % 10 ] );
  /*   for (int i = 0; i < 10; i++)
     {
     limit_column = rand() % (sizeof(column) / sizeof(int));
