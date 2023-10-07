@@ -4,7 +4,7 @@
 
 struct mapa
 {
-    char matriz[5][10+1];
+    char matriz[ 5 ][ 10 + 1 ];
     int linhas;
     int colunas;
 };
@@ -15,24 +15,29 @@ typedef struct mapa MAPA;
 
 
 
-void move(int direção, MAPA* m);
 
-int find_point(MAPA *m);
+
+void move( char direção, MAPA* m );
+
+int find_point( MAPA *m );
 
 // void aloca_mapa(MAPA* m );
 
-void le_mapa(MAPA *m);
+void le_mapa( MAPA *m, char *Nmap );
 
 // void libera_mapa(MAPA* m);
 
-void show_map(MAPA *m);
+void show_map( MAPA *m, int r );
 
 int acabou();
 
-void validar_passo(int x, int y, MAPA *m , char direção);
+int validar_passo( int x, int y, MAPA *m );
 
-void fantasma(MAPA *m);
+void fantasma( MAPA *m, int rlinhas, int rcolunas );
 
+int find_heroi( MAPA *m );
+
+int isRun( MAPA *m );
 
 
 
