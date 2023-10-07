@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 
 struct mapa
@@ -10,28 +9,29 @@ struct mapa
     int colunas;
 };
 
-FILE* f;
+
 
 typedef struct mapa MAPA;
 
-void fantasma(MAPA *m);
+
+
 void move(int direção, MAPA* m);
 
 int find_point(MAPA *m);
 
 // void aloca_mapa(MAPA* m );
 
-void le_mapa(MAPA* m);
+void le_mapa(MAPA *m);
 
 // void libera_mapa(MAPA* m);
 
-void show_map(MAPA* m);
+void show_map(MAPA *m);
 
 int acabou();
 
-
 void validar_passo(int x, int y, MAPA *m , char direção);
 
+void fantasma(MAPA *m);
 
 
 

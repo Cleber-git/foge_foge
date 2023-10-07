@@ -1,6 +1,6 @@
 #include "l.h"
 
-// definindo xonstantes para o código ficar mais intuitivo
+// definindo constantes para o código ficar mais intuitivo
 
 #define HEROI '@'
 #define PAREDE_VERTICAL '|'
@@ -15,6 +15,8 @@
 #define FANTASMA 'f'
 
 
+FILE* f;
+
 void fantasma(MAPA *m){
 
     for ( int i = 0; i < m->linhas; i++ )
@@ -23,9 +25,19 @@ void fantasma(MAPA *m){
         {
             if ( m->matriz[ i ][ j ] == FANTASMA)
             {
-                m->matriz[ i ][ j ] = ALIMENTO;
-                m->matriz[ i ][ j+1 ] = FANTASMA;
-                break;
+                if (m->matriz[ i ][ j + 1 ] == HEROI)
+                {
+                    exit(1);
+                }
+                if (m->matriz[ i ][ j + 1 ] != PAREDE_HORIZONTAL &
+                m->matriz[ i ][ j+1 ] != PAREDE_VERTICAL )
+                {
+                    m->matriz[ i ][ j ] = ALIMENTO;
+                    m->matriz[ i ][ j+1 ] = FANTASMA;
+                    break;
+                }
+                
+                
             }
             
         }
