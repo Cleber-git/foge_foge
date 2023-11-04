@@ -1,44 +1,64 @@
 #include "l.c"
 #include <time.h>
 
+MAPA m;
 
-    MAPA m;
+
+
 
 int main(){
 
+
+    
     srand( time( NULL ) );
 
     int rl;
     int rc;
 
 
-    
-    le_mapa( &m, "map2.txt" );
+    POS prox;
+    le_mapa( &m, "mapa.txt" );
     
     do
     { 
-
+        printf("%s\n", temPilula?"SIM":"NÃO");
 
 
         rl = rand() % m.linhas;
         rc = rand() % m.colunas;
 
-        
-        
-        // debug para ver o funcionamento da aleatoriedade da movimentação
-        printf( "%d %d\n", rl, rc );
+
         show_map( &m, m.linhas);
 
         char comando;
         scanf( " %c", &comando );
 
-        move( comando, &m );
+        
+
+        POS person = find_person( &m, HEROI );
+        // printf("%d %d\n", person.x, person.y);
+        
+        verify_find(&person, comando);
+        ehpilula(&m, &person, comando);
+
+
+
+        
+        // 
+        // printf("%d %d\n", person.x, person.y);
+        
+        move( comando, &m, HEROI );
+        if (comando == BOMBA && temPilula)
+        {
+
+            explode_fantasma(&m, person.x, person.y);
+            temPilula=0;
+        }
+
+        
         fantasma( &m, rl, rc );
 
-        
-        
-
-    } while (!acabou());
+    } while (acabou( &m, HEROI ));
     
 
  

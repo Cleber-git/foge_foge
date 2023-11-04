@@ -1,4 +1,6 @@
 #include "l.h"
+#include <time.h>
+
 
 #define HEROI '@'
 #define PAREDE_VERTICAL '|'
@@ -11,14 +13,19 @@
 #define VAZIO ' '
 #define SAIR 'q'
 #define FANTASMA 'f'
+#define BOMBA 'b'
+#define PILULA 'p'
 #define PERDEU "========== O fantasma te encontrou ==========\n"
 #define GANHOU "********** !! VOCÊ VENCEU !! **********\n"
+
+int temPilula = 0;
+
 
 
 
 FILE* f;
 
-
+POS pos;
 void le_mapa(MAPA* m, char * Nmap)
 {
     
@@ -33,7 +40,7 @@ void le_mapa(MAPA* m, char * Nmap)
         fscanf( f, " %s", m->matriz[ i ] );
 
     }
-        if ( !f )
+    if ( !f )
     {
         printf( "Erro, não foi possível abrir seu arquivo!\n" );
     }
@@ -45,45 +52,118 @@ void show_map( MAPA* m , int r )
 
     for ( int i = 0; i < r; i++ )
     {
-        printf("%s\n", m->matriz[ i ]);
+        printf( "%s\n", m->matriz[ i ] );
     }
 
 }
 
 
-int acabou()
+int acabou(MAPA* m, char avatar)
 {
-    return 0;
-}
-
-
-int find_point( MAPA* m )
-{
-
-    int calculator = 0;
-
-    for ( int i = 0; i < m->linhas; i++ )
+    for (int i = 0; i < m->linhas; i++)
     {
-        for ( int j = 0; j < m->colunas; j++ )
+        for (int j = 0; j < m->colunas + 1; j++)
         {
-            if ( m->matriz[ i ][ j ] == ALIMENTO )
+            if ( m->matriz[ i ][ j ] == avatar )
             {
-                calculator++;
+                
+                return 1;
+
             }
             
         }
         
-    }
-    if ( !calculator ) {
-        
-        printf( "%s", GANHOU );
-        exit( 1 );
-    };
+    
 
-    return 1;
+    }
+
+    return 0;
+    
+
+    
+}
+
+void verify_find(POS* p, char command){
+
+    switch (command)
+    {
+        case CIMA:
+            p->x += -1;
+            break;
+        case BAIXO:
+            p->x += 1;
+            break;
+        case ESQUERDA:
+            p->y += -1;
+            break;
+        case DIREITA:
+            p->y += 1;
+            break;
+        default:
+            break;
+    }
+
+}
+
+int ehpilula( MAPA* m, POS* per, char command ){
+
+    POS hero = find_person(m, HEROI);
+    // printf("%d %d\n", hero.x, hero.y);
+
+    verify_find(&hero, command);
+
+    if(m->matriz[ hero.x ][ hero.y ] == PILULA ){
+        
+        temPilula=1;
+
+        return 1;
+    }
+
+    return 0;
+
+}
+
+
+POS find_person( MAPA* m, char person )
+{
+
+    POS per;
+    
+    for ( int i = 0; i < m->linhas; i++ )
+    {
+
+        for ( int j = 0; j < m->colunas + 1 ; j++ )
+        {
+
+            if ( m->matriz[ i ][ j ] == person )
+            {
+
+                per.x = i;
+                per.y = j;
+                break;
+
+            }
+        }
+        
+    }
+
+    return per;
     
 
 }
+
+// int find_bomba(MAPA* m){
+//     int x
+//     int y
+//     if( m->matriz[x][y] == BOMBA ){
+
+
+
+
+//     }
+
+
+// }
 
 int validar_passo( int x, int y, MAPA *m  )
 {
@@ -101,19 +181,23 @@ int validar_passo( int x, int y, MAPA *m  )
 
 }
 
-void move( char direção, MAPA* m )
+int validar_comando(char command){
+
+    if (command != CIMA && command != BAIXO && command != ESQUERDA && command != DIREITA && command != BOMBA)
+    {
+        return 0;
+    }
+    return 1;
+}
+
+
+void move( char direção, MAPA* m, char personagem )
 {
 
-    int x;
-    int y;
+
     int posx;
     int posy;
     
-    if ( !isRun )
-    {
-        exit( 1 );
-    }
-
 
     for ( int i = 0; i < m->linhas; i++ )
     {
@@ -121,10 +205,11 @@ void move( char direção, MAPA* m )
         for ( int j = 0; j < m->colunas; j++ )
         {
 
-            if ( m->matriz[ i ][ j ] == HEROI )
+            if ( m->matriz[ i ][ j ] == personagem )
             {
-                x = i;
-                y = j;
+
+                pos.x = i;
+                pos.y = j;
                 break;
                 
             }
@@ -136,8 +221,8 @@ void move( char direção, MAPA* m )
 
 
 
-    posx = x;
-    posy = y;
+    posx = pos.x;
+    posy = pos.y;
 
     switch ( direção )
     {
@@ -157,28 +242,43 @@ void move( char direção, MAPA* m )
         case ESQUERDA:
             posy--;
             break;
-
         case SAIR:
             exit( 1 );
             break;
+        default:
+            break;
+
+
     
     }
 
     if( validar_passo( posx, posy, m ) )
     {
 
-        if ( m->matriz[ x ][ y ] == FANTASMA )
-        {
-            m->matriz[ posx ][ posy ] = FANTASMA;   
-            show_map( m , m->linhas);
-            printf( "%s", PERDEU );
-            exit( 1 );
-        }
         
-        m->matriz[ posx ][ posy ] = HEROI;
-        m->matriz[ x ][ y ] = VAZIO;
+        if ( personagem == HEROI )
+        {
 
+            if ( m->matriz[ posx ][ posy ] != FANTASMA && direção != BOMBA )//&& validar_comando(direção)
+            {
+                
+                m->matriz[ posx ][ posy ] = personagem;
+                m->matriz[ pos.x ][ pos.y ] = VAZIO;
+
+            }else if ( m->matriz[ posx ][ posy ] == FANTASMA  )
+            {
+                show_map( m, m->linhas );
+                m->matriz[ pos.x ][ pos.y ] = VAZIO;
+                printf( "%s", PERDEU );
+
+                
+            }
+        }
     }
+
+    
+        
+
 
 }
 
@@ -195,21 +295,28 @@ void fantasma( MAPA *m, int rlinhas, int rcolunas )
             if ( m->matriz[ i ][ j ] == FANTASMA )
             {
 
-                if ( m->matriz[ i ][ j + 1 ] == HEROI )
-                {
-                    printf("%s", PERDEU );
-                    exit( 1 );
-                }
-
-                if ( m->matriz[ rlinhas ][ rcolunas ] != PAREDE_HORIZONTAL &
-                     m->matriz[ rlinhas ][ rcolunas ] != PAREDE_VERTICAL )
+                if ( validar_passo( rlinhas, rcolunas, m ) )
                 {
 
-                    m->matriz[ i ][ j ] = ALIMENTO;
-                    m->matriz[ rlinhas ][ rcolunas ] = FANTASMA;
-                    break;
+                    if ( m->matriz[ rlinhas ][ rcolunas ] != HEROI )
+                    {
+                        m->matriz[ i ][ j ] = ALIMENTO;
+                        m->matriz[ rlinhas ][ rcolunas ] = FANTASMA;
+                        
 
+                    }else
+                    {
+
+                        m->matriz[ i ][ j ] = ALIMENTO;
+                        m->matriz[ rlinhas ][ rcolunas ] = FANTASMA;  
+                        show_map(m, m->linhas);
+                        printf("%s\n", PERDEU);
+
+                    }
                 }
+                    
+
+                   
                 
             }
             
@@ -221,47 +328,27 @@ void fantasma( MAPA *m, int rlinhas, int rcolunas )
 
 }
 
-int isRun( MAPA *m )
-{
 
-   if ( find_heroi( m ) &&
-        find_point( m ))
-   {
-        return 1;
-   }
-   return 0;
-   
-}
+void explode_fantasma( MAPA *m, int x, int y ){
 
-int find_heroi( MAPA *m )
-{
-    
-    
-    int find = 0;
-
-    for (int i = 0; i < m->linhas; i++)
+    for( int i = 1; i <=3 ; i++ )
     {
-
-        for (int j = 0; j < m->colunas; j++)
+        if ( validar_passo( pos.x, pos.y + i, m ) )
         {
-            
-            if ( m->matriz[ i ][ j ] == HEROI )
-            {
 
-                find++;
+            m->matriz[ pos.x ][ pos.y + i ] = VAZIO;
+            // printf("fiz isso %d vez(es)\n", i);
             
-            }
-            
+
         }
-        
     }
-    if( !find ){
-        printf( "%c ", PERDEU );
-        exit( 1 );
-    }
-    return 1;
-
+    // show_map(m, m->linhas);
 }
+    
+
+
+
+
 
 
 
@@ -272,9 +359,9 @@ int find_heroi( MAPA *m )
     
 //     free(m->matriz);
 
-//     for (int i = 0; i < 5; i++)
+//     for ( int i = 0; i < 5; i++ )
 //     {
-//         free(m->matriz[i]);
+//         free( m->matriz[ i ] );
 //     }
 
 // }
@@ -282,10 +369,10 @@ int find_heroi( MAPA *m )
 
 // void aloca_mapa(){
 
-//     m->matriz = malloc(sizeof(char*) * 5 );
-//     for (int i = 0; i < 5; i++)
+//     m->matriz = malloc( sizeof( char* ) * 5 );
+//     for ( int i = 0; i < 5; i++ )
 //     {
-//         m->matriz[i] = malloc(sizeof(char) * (m->colunas +1));
+//         m->matriz[ i ] = malloc( sizeof( char ) * ( m->colunas +1 ) );
 //     }
 
 // }

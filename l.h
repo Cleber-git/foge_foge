@@ -9,17 +9,24 @@ struct mapa
     int colunas;
 };
 
+struct posição
+{
 
+    int x;
+    int y;
+};
 
 typedef struct mapa MAPA;
 
+typedef struct posição POS;
 
 
 
 
-void move( char direção, MAPA* m );
 
-int find_point( MAPA *m );
+void move( char direção, MAPA* m, char personagem );
+
+POS find_person( MAPA *m, char person );
 
 // void aloca_mapa(MAPA* m );
 
@@ -29,16 +36,13 @@ void le_mapa( MAPA *m, char *Nmap );
 
 void show_map( MAPA *m, int r );
 
-int acabou();
+int acabou(MAPA* m, char avatar);
 
 int validar_passo( int x, int y, MAPA *m );
 
 void fantasma( MAPA *m, int rlinhas, int rcolunas );
 
-int find_heroi( MAPA *m );
-
-int isRun( MAPA *m );
-
-
-
-
+void explode_fantasma(MAPA *m, int x, int y);
+void verify_find(POS* p, char command);
+int ehpilula( MAPA* m, POS* per, char command );
+int validar_comando(char command);
