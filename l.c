@@ -328,22 +328,6 @@ void fantasma( MAPA *m, int rlinhas, int rcolunas )
 
 }
 
-
-void explode_fantasma( MAPA *m, int x, int y, int qtd ){
-
-    if(qtd == 0) return;
-    if (!validar_passo(x, y + 1, m)) return;
-
-    m->matriz[ x ][ y + 1 ] = VAZIO;
-    qtd--;
-    explode_fantasma(m, x, y + 1, qtd);
-
-    
-            
-            
-
-        
-}
     // show_map(m, m->linhas);
 
     

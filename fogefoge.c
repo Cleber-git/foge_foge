@@ -5,7 +5,33 @@ MAPA m;
 
 
 
+void explode_fantasma(POS *person){
 
+    explode_fantasma2(person->x, person->y, 0, 1, 3);
+    explode_fantasma2(person->x, person->y, 0, -1, 3);
+    explode_fantasma2(person->x, person->y, 1, 0, 3);
+    explode_fantasma2(person->x, person->y, -1, 0, 3);
+}
+
+void explode_fantasma2( int x, int y, int somax, int somay, int qtd ){
+
+    int novox = x +somax;
+    int novoy = y +somay;
+
+
+    if(qtd == 0) return;
+    if (!validar_passo(novox, novoy , &m)) return;
+
+    m.matriz[ novox ][ novoy ] = VAZIO;
+    qtd--;
+    explode_fantasma2( novox, novoy, somax, somay, qtd );
+
+    
+            
+            
+
+        
+}
 int main(){
 
 
@@ -51,7 +77,7 @@ int main(){
         if (comando == BOMBA && temPilula)
         {
 
-            explode_fantasma(&m, person.x, person.y, 3);
+            explode_fantasma( &person );
             temPilula=0;
         }
 

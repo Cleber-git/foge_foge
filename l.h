@@ -41,8 +41,8 @@ int acabou(MAPA* m, char avatar);
 int validar_passo( int x, int y, MAPA *m );
 
 void fantasma( MAPA *m, int rlinhas, int rcolunas );
-
-void explode_fantasma(MAPA *m, int x, int y, int qtd);
+void explode_fantasma(POS *person);
+void explode_fantasma2( int x, int y, int somax, int somay, int qtd );
 void verify_find(POS* p, char command);
 int ehpilula( MAPA* m, POS* per, char command );
 int validar_comando(char command);
