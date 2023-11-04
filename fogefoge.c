@@ -51,7 +51,7 @@ int main(){
         if (comando == BOMBA && temPilula)
         {
 
-            explode_fantasma(&m, person.x, person.y);
+            explode_fantasma(&m, person.x, person.y, 3);
             temPilula=0;
         }
 

@@ -259,7 +259,7 @@ void move( char direção, MAPA* m, char personagem )
         if ( personagem == HEROI )
         {
 
-            if ( m->matriz[ posx ][ posy ] != FANTASMA && direção != BOMBA )//&& validar_comando(direção)
+            if ( m->matriz[ posx ][ posy ] != FANTASMA && direção != BOMBA && validar_comando(direção) )//&& validar_comando(direção)
             {
                 
                 m->matriz[ posx ][ posy ] = personagem;
@@ -329,21 +329,23 @@ void fantasma( MAPA *m, int rlinhas, int rcolunas )
 }
 
 
-void explode_fantasma( MAPA *m, int x, int y ){
+void explode_fantasma( MAPA *m, int x, int y, int qtd ){
 
-    for( int i = 1; i <=3 ; i++ )
-    {
-        if ( validar_passo( pos.x, pos.y + i, m ) )
-        {
+    if(qtd == 0) return;
+    if (!validar_passo(x, y + 1, m)) return;
 
-            m->matriz[ pos.x ][ pos.y + i ] = VAZIO;
-            // printf("fiz isso %d vez(es)\n", i);
+    m->matriz[ x ][ y + 1 ] = VAZIO;
+    qtd--;
+    explode_fantasma(m, x, y + 1, qtd);
+
+    
+            
             
 
-        }
-    }
-    // show_map(m, m->linhas);
+        
 }
+    // show_map(m, m->linhas);
+
     
 
 
