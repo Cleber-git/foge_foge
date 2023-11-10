@@ -2,6 +2,8 @@
     "files.associations": {
         "*.py": "python",
         "stdio.h": "c",
-        "algorithm": "c"
+        "algorithm": "c",
+        "time.h": "c",
+        "stdlib.h": "c"
     }
 }

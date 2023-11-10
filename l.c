@@ -1,5 +1,10 @@
+#ifndef _L_C_
+#define _L_C_
+
+#include <stdio.h>
+#include <stdlib.h>
 #include "l.h"
-#include <time.h>
+
 
 
 #define HEROI '@'
@@ -9,8 +14,7 @@
 #define BAIXO 's'
 #define ESQUERDA 'a'
 #define DIREITA 'd'
-#define ALIMENTO '.'
-#define VAZIO ' '
+#define VAZIO '.'
 #define SAIR 'q'
 #define FANTASMA 'f'
 #define BOMBA 'b'
@@ -19,13 +23,81 @@
 #define GANHOU "********** !! VOCÊ VENCEU !! **********\n"
 
 int temPilula = 0;
+int qtd_p = 0;
+
+char desenhoparede[ 4 ][7] = {
+	{"......" },
+	{"......" },
+	{"......" },
+	{"......" }
+};
+
+char desenhofantasma[ 4 ][7] = {
+	{" .-.  " },
+	{"| OO| " },
+	{"|   | " },
+	{"'^^^' " }
+};
+
+char desenhoheroi[ 4 ][7] = {
+	{" .--. "  },
+	{"/ _.-'"  },
+	{"\\  '-." },
+	{" '--' "  }
+};
+
+char desenhopilula[4][7] = {
+	{"      "},
+	{" .-.  "},
+	{" '-'  "},
+	{"      "}
+};
+
+char desenhovazio[4][7] = {
+	{"      "},
+	{"      "},
+	{"      "},
+	{"      "}
+};
 
 
+
+
+
+
+
+
+
+struct mapa{
+    int linhas;
+    int colunas;
+    char matriz[6][10+1];
+};
+
+struct posição
+{
+
+    int x;
+    int y;
+
+};
+typedef struct mapa MAPA;
+
+typedef struct posição POS;
 
 
 FILE* f;
 
 POS pos;
+
+void mostrarMaior( char desenho[4][7] ,int part  ){
+
+    
+    printf("%s", desenho[part]);
+        
+
+}
+
 void le_mapa(MAPA* m, char * Nmap)
 {
     
@@ -38,7 +110,7 @@ void le_mapa(MAPA* m, char * Nmap)
     {
         
         fscanf( f, " %s", m->matriz[ i ] );
-
+        
     }
     if ( !f )
     {
@@ -47,12 +119,54 @@ void le_mapa(MAPA* m, char * Nmap)
 }
 
 
-void show_map( MAPA* m , int r )
+
+
+
+void show_map( MAPA* m )
 {
 
-    for ( int i = 0; i < r; i++ )
+    for ( int i = 0; i < m->linhas; i++ )
     {
-        printf( "%s\n", m->matriz[ i ] );
+
+        for ( int parte = 0; parte < 4; parte++ )
+        {
+            for ( int j = 0; j < m->colunas + 1; j++ )
+            {
+                switch ( m->matriz[i][j] )
+                {
+
+                case FANTASMA:
+                    mostrarMaior( desenhofantasma, parte );
+                    break;
+
+                case HEROI:
+                    mostrarMaior( desenhoheroi, parte );
+                    break;
+
+                case PILULA:
+                    mostrarMaior( desenhopilula, parte );
+                    break;
+
+                case PAREDE_HORIZONTAL:
+                    mostrarMaior( desenhoparede, parte );
+                    break;
+                    
+                case PAREDE_VERTICAL:
+                    mostrarMaior( desenhoparede, parte );
+                    break;
+
+                case VAZIO:
+                    mostrarMaior( desenhovazio, parte );
+                    break;
+                
+                default:
+                    break;
+                    
+                }
+            }
+            
+            printf( "\n" );
+        }
     }
 
 }
@@ -105,25 +219,6 @@ void verify_find(POS* p, char command){
 
 }
 
-int ehpilula( MAPA* m, POS* per, char command ){
-
-    POS hero = find_person(m, HEROI);
-    // printf("%d %d\n", hero.x, hero.y);
-
-    verify_find(&hero, command);
-
-    if(m->matriz[ hero.x ][ hero.y ] == PILULA ){
-        
-        temPilula=1;
-
-        return 1;
-    }
-
-    return 0;
-
-}
-
-
 POS find_person( MAPA* m, char person )
 {
 
@@ -151,6 +246,28 @@ POS find_person( MAPA* m, char person )
     
 
 }
+
+int ehpilula( MAPA* m, POS* per, char command ){
+
+    POS hero = find_person(m, HEROI);
+    // printf("%d %d\n", hero.x, hero.y);
+
+    verify_find(&hero, command);
+
+    if(m->matriz[ hero.x ][ hero.y ] == PILULA ){
+        
+        temPilula += 1;
+        qtd_p += 1;
+
+        return 1;
+    }
+
+    return 0;
+
+}
+
+
+
 
 // int find_bomba(MAPA* m){
 //     int x
@@ -188,6 +305,7 @@ int validar_comando(char command){
         return 0;
     }
     return 1;
+    
 }
 
 
@@ -242,14 +360,14 @@ void move( char direção, MAPA* m, char personagem )
         case ESQUERDA:
             posy--;
             break;
+
         case SAIR:
             exit( 1 );
             break;
+
         default:
             break;
 
-
-    
     }
 
     if( validar_passo( posx, posy, m ) )
@@ -263,14 +381,14 @@ void move( char direção, MAPA* m, char personagem )
             {
                 
                 m->matriz[ posx ][ posy ] = personagem;
-                m->matriz[ pos.x ][ pos.y ] = VAZIO;
+                m->matriz[ pos.x ][ pos.y ] =  VAZIO;
 
             }else if ( m->matriz[ posx ][ posy ] == FANTASMA  )
             {
-                show_map( m, m->linhas );
-                m->matriz[ pos.x ][ pos.y ] = VAZIO;
-                printf( "%s", PERDEU );
 
+                show_map( m );
+                m->matriz[ pos.x ][ pos.y ] =  VAZIO;
+                printf( "%s", PERDEU );
                 
             }
         }
@@ -280,6 +398,14 @@ void move( char direção, MAPA* m, char personagem )
         
 
 
+}
+
+int ehvalida( MAPA* m, int x, int y){
+    if ( x >= m->linhas || y >= m->colunas) return 0;
+
+    return 1;
+
+    
 }
 
 
@@ -289,52 +415,40 @@ void fantasma( MAPA *m, int rlinhas, int rcolunas )
     for ( int i = 0; i < m->linhas; i++ )
     {
 
-        for ( int j = 0; j < m->colunas; j++ )
+        for ( int j = 0; j < m->colunas + 1; j++ )
         {
 
             if ( m->matriz[ i ][ j ] == FANTASMA )
             {
 
-                if ( validar_passo( rlinhas, rcolunas, m ) )
+                if ( validar_passo( rlinhas, rcolunas, m )  )
                 {
 
-                    if ( m->matriz[ rlinhas ][ rcolunas ] != HEROI )
+                    if ( m->matriz[ rlinhas ][ rcolunas ] != HEROI && ehvalida( m,rlinhas, rcolunas) )
                     {
-                        m->matriz[ i ][ j ] = ALIMENTO;
+
+                        m->matriz[ i ][ j ] =  VAZIO;
                         m->matriz[ rlinhas ][ rcolunas ] = FANTASMA;
                         
-
-                    }else
+                    }else if(m->matriz[ rlinhas ][ rcolunas ] == HEROI)
                     {
 
-                        m->matriz[ i ][ j ] = ALIMENTO;
+                        m->matriz[ i ][ j ] =  VAZIO;
                         m->matriz[ rlinhas ][ rcolunas ] = FANTASMA;  
-                        show_map(m, m->linhas);
+                        show_map( m );
                         printf("%s\n", PERDEU);
 
                     }
-                }
-                    
 
-                   
+                }  
                 
             }
             
         }
         
     }
-    
-
 
 }
-
-    // show_map(m, m->linhas);
-
-    
-
-
-
-
 
 
 
@@ -365,3 +479,47 @@ void fantasma( MAPA *m, int rlinhas, int rcolunas )
 
 
 
+
+// char desenhoParede[4][7] = {
+//     {"......"},
+//     {"......"},
+//     {"......"},
+//     {"......"}
+// };
+
+
+// char desenhoHeroi[4][7] = {
+// 	{" .--. "  },
+// 	{"/ _.-'"  },
+// 	{"\\  '-." },
+// 	{" '--' "  }
+// };
+
+// char desenhoFantasma[4][7] = {
+// 	{" .-.  " },
+// 	{"| OO| " },
+// 	{"|   | " },
+// 	{"'^^^' " }
+// };
+
+
+// char desenhoPilula[4][7] = {
+// 	{"      "},
+// 	{" .-.  "},
+// 	{" '-'  "},
+// 	{"      "}
+// };
+
+
+// char desenhoVazio[4][7] = {
+//     {"      "},
+//     {"      "},
+//     {"      "},
+//     {"      "}
+
+// };
+
+
+
+
+#endif
