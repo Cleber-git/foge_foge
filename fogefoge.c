@@ -7,7 +7,7 @@ MAPA m;
 
 
 
-
+w
 void explode_fantasma(POS *person){
 
     if(!temPilula) return;
