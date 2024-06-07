@@ -1,29 +1,15 @@
-#ifndef _L_C_
-#define _L_C_
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "l.h"
+// #include "type.h"
 
 
 
-#define HEROI '@'
-#define PAREDE_VERTICAL '|'
-#define PAREDE_HORIZONTAL '-'
-#define CIMA 'w'
-#define BAIXO 's'
-#define ESQUERDA 'a'
-#define DIREITA 'd'
-#define VAZIO '.'
-#define SAIR 'q'
-#define FANTASMA 'f'
-#define BOMBA 'b'
-#define PILULA 'p'
-#define PERDEU "========== O fantasma te encontrou ==========\n"
-#define GANHOU "********** !! VOCÊ VENCEU !! **********\n"
 
-int temPilula = 0;
-int qtd_p = 0;
+
+
 
 char desenhoparede[ 4 ][7] = {
 	{"......" },
@@ -32,14 +18,14 @@ char desenhoparede[ 4 ][7] = {
 	{"......" }
 };
 
-char desenhofantasma[ 4 ][7] = {
+char  desenhofantasma[ 4 ][7] = {
 	{" .-.  " },
 	{"| OO| " },
 	{"|   | " },
 	{"'^^^' " }
 };
 
-char desenhoheroi[ 4 ][7] = {
+char  desenhoheroi[ 4 ][7] = {
 	{" .--. "  },
 	{"/ _.-'"  },
 	{"\\  '-." },
@@ -68,25 +54,10 @@ char desenhovazio[4][7] = {
 
 
 
-struct mapa{
-    int linhas;
-    int colunas;
-    char matriz[6][10+1];
-};
-
-struct posição
-{
-
-    int x;
-    int y;
-
-};
-typedef struct mapa MAPA;
-
-typedef struct posição POS;
 
 
-FILE* f;
+
+
 
 POS pos;
 
@@ -98,7 +69,7 @@ void mostrarMaior( char desenho[4][7] ,int part  ){
 
 }
 
-void le_mapa(MAPA* m, char * Nmap)
+void le_mapa(MAPA* m, char * Nmap, FILE* f)
 {
     
     f = fopen( Nmap, "r" );
@@ -247,7 +218,7 @@ POS find_person( MAPA* m, char person )
 
 }
 
-int ehpilula( MAPA* m, POS* per, char command ){
+int ehpilula( MAPA* m, POS* per, char command, int *tp, int *qtd ){
 
     POS hero = find_person(m, HEROI);
     // printf("%d %d\n", hero.x, hero.y);
@@ -256,8 +227,8 @@ int ehpilula( MAPA* m, POS* per, char command ){
 
     if(m->matriz[ hero.x ][ hero.y ] == PILULA ){
         
-        temPilula += 1;
-        qtd_p += 1;
+        (*tp)++;
+        (*qtd)++;
 
         return 1;
     }
@@ -522,4 +493,3 @@ void fantasma( MAPA *m, int rlinhas, int rcolunas )
 
 
 
-#endif

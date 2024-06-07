@@ -1,12 +1,15 @@
 #include <stdio.h>
 
+// #include "l.h"
+// #include "type.h"
 #include "l.h"
 
-
 MAPA m;
+FILE *f;
 
 
-
+int temPilula=0 ;
+int qtd_p =0;
 
 void explode_fantasma(POS *person){
 
@@ -44,7 +47,7 @@ int main(){
     int rc;
 
 
-    le_mapa( &m, "mapa.txt" );
+    le_mapa( &m, "mapa.txt", f );
     
     do
     { 
@@ -78,7 +81,7 @@ int main(){
         person = find_person( &m, HEROI );
         
         verify_find(&person, comando);
-        ehpilula(&m, &person, comando);
+        ehpilula(&m, &person, comando, &temPilula, &qtd_p);
 
 
 

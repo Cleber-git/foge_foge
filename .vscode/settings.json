@@ -1,9 +1,12 @@
 {
     "files.associations": {
         "*.py": "python",
+        "*.dart": "dart",
         "stdio.h": "c",
         "algorithm": "c",
         "time.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "l.h": "c",
+        "type.h": "c"
     }
 }
